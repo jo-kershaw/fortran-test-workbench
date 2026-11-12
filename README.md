@@ -27,3 +27,9 @@ See [SETUP.md](SETUP.md) for installation instructions.
 ## Future work
 
 Explore further testing workflows, including fUnit and pFUnit, and extend the examples to more complex scientific codes.
+
+## Acknowledgements
+
+This project grew out of the *Unit Testing in Fortran* workshop taught by [Connor Aird](https://github.com/connoraird), using the [Carpentries course materials](https://github.com/carpentries-incubator/fortran-unit-testing).
+
+The examples here are my own experiments and extensions rather than reproductions of the course exercises.
