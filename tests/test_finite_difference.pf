@@ -1,0 +1,52 @@
+module test_finite_difference
+    use funit
+    use iso_fortran_env, only : real64
+    use finite_difference_mod, only : first_derivative
+    implicit none
+contains
+    @Test
+    subroutine test_constant_is_zero()
+        real(real64) :: y(5), derivative(5)
+        y = 7.0_real64
+        derivative = first_derivative(y, 0.5_real64)
+        @assertTrue(all(abs(derivative) < 1.0e-12_real64))
+    end subroutine test_constant_is_zero
+
+    @Test
+    subroutine test_linear_exact_even_at_boundaries()
+        real(real64) :: y(5), derivative(5)
+        y = [1.0_real64, 2.0_real64, 3.0_real64, 4.0_real64, 5.0_real64]
+        derivative = first_derivative(y, 0.5_real64)
+        @assertTrue(all(abs(derivative - 2.0_real64) < 1.0e-12_real64))
+    end subroutine test_linear_exact_even_at_boundaries
+
+    @Test
+    subroutine test_quadratic_interior_exact()
+        real(real64) :: y(5), derivative(5)
+        y = [0.0_real64, 1.0_real64, 4.0_real64, 9.0_real64, 16.0_real64]
+        derivative = first_derivative(y, 1.0_real64)
+        ! For y = x**2, dy/dx = 2*x; central differences are exact here.
+        @assertTrue(all(abs(derivative(2:4) - [2.0_real64, 4.0_real64, 6.0_real64]) &
+            < 1.0e-12_real64))
+    end subroutine test_quadratic_interior_exact
+
+    @Test
+    subroutine test_sine_converges_with_halved_step()
+        real(real64) :: coarse_x(11), fine_x(21)
+        real(real64) :: coarse_derivative(11), fine_derivative(21)
+        real(real64) :: coarse_error, fine_error
+        integer :: i
+        do i = 1, 11
+            coarse_x(i) = real(i-1, real64) * 0.2_real64
+        end do
+        do i = 1, 21
+            fine_x(i) = real(i-1, real64) * 0.1_real64
+        end do
+        coarse_derivative = first_derivative(sin(coarse_x), 0.2_real64)
+        fine_derivative = first_derivative(sin(fine_x), 0.1_real64)
+        ! x=1 is index 6 on coarse grid and 11 on fine grid.
+        coarse_error = abs(coarse_derivative(6) - cos(1.0_real64))
+        fine_error = abs(fine_derivative(11) - cos(1.0_real64))
+        @assertTrue(fine_error < 0.30_real64 * coarse_error)
+    end subroutine test_sine_converges_with_halved_step
+end module test_finite_difference

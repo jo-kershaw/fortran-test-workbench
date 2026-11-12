@@ -1,0 +1,31 @@
+module test_physics
+    use funit
+    use iso_fortran_env, only : real64
+    use physics_mod, only : kinetic_energy, speed_3d
+    implicit none
+contains
+    @Test
+    subroutine test_energy_known_answer()
+        @assertTrue(abs(kinetic_energy(2.0_real64, 3.0_real64) - 9.0_real64) < 1.0e-12_real64)
+    end subroutine test_energy_known_answer
+
+    @Test
+    subroutine test_energy_velocity_sign()
+        real(real64) :: positive_energy, negative_energy
+        positive_energy = kinetic_energy(2.0_real64, 3.0_real64)
+        negative_energy = kinetic_energy(2.0_real64, -3.0_real64)
+        @assertTrue(abs(positive_energy - negative_energy) < 1.0e-12_real64)
+    end subroutine test_energy_velocity_sign
+
+    @Test
+    subroutine test_energy_zero_velocity()
+        @assertTrue(abs(kinetic_energy(2.0_real64, 0.0_real64)) < 1.0e-12_real64)
+    end subroutine test_energy_zero_velocity
+
+    @Test
+    subroutine test_speed_three_four_zero()
+        real(real64) :: velocity(3)
+        velocity = [3.0_real64, 4.0_real64, 0.0_real64]
+        @assertTrue(abs(speed_3d(velocity) - 5.0_real64) < 1.0e-12_real64)
+    end subroutine test_speed_three_four_zero
+end module test_physics

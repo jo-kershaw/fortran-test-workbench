@@ -1,0 +1,27 @@
+module test_statistics
+    use funit
+    use iso_fortran_env, only : real64
+    use statistics_mod, only : mean_value, population_variance
+    implicit none
+contains
+    @Test
+    subroutine test_mean_three_values()
+        real(real64) :: x(3)
+        x = [1.0_real64, 2.0_real64, 3.0_real64]
+        @assertTrue(abs(mean_value(x) - 2.0_real64) < 1.0e-12_real64)
+    end subroutine test_mean_three_values
+
+    @Test
+    subroutine test_mean_of_constant()
+        real(real64) :: x(4)
+        x = 7.0_real64
+        @assertTrue(abs(mean_value(x) - 7.0_real64) < 1.0e-12_real64)
+    end subroutine test_mean_of_constant
+
+    @Test
+    subroutine test_population_variance()
+        real(real64) :: x(3)
+        x = [1.0_real64, 2.0_real64, 3.0_real64]
+        @assertTrue(abs(population_variance(x) - 2.0_real64/3.0_real64) < 1.0e-12_real64)
+    end subroutine test_population_variance
+end module test_statistics

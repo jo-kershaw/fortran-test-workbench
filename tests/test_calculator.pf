@@ -1,0 +1,30 @@
+module test_calculator
+    use funit
+    use calculator_mod, only : add, square, is_even
+    implicit none
+contains
+    @Test
+    subroutine test_add_positive()
+        @assertEqual(5, add(2, 3))
+    end subroutine test_add_positive
+
+    @Test
+    subroutine test_add_negative()
+        @assertEqual(-2, add(-3, 1))
+    end subroutine test_add_negative
+
+    @Test
+    subroutine test_square_negative()
+        @assertEqual(16, square(-4))
+    end subroutine test_square_negative
+
+    @Test
+    subroutine test_zero_is_even()
+        @assertTrue(is_even(0))
+    end subroutine test_zero_is_even
+
+    @Test
+    subroutine test_odd_number()
+        @assertFalse(is_even(3))
+    end subroutine test_odd_number
+end module test_calculator
